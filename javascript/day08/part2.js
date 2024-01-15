@@ -1,8 +1,7 @@
-
+2
 const fs = require('node:fs');
 
 let input = fs.readFileSync("./input.txt").toString();
-
 
 const test = `LR
 
@@ -23,6 +22,7 @@ class Node {
         this.left = left;
         this.rigth = right;
     }
+
 }
 
 function createNodesArray(nodesInput) {
@@ -42,38 +42,22 @@ function main(input) {
     const [directions, _, ...nodesInput] = input.split("\n");
     const nodes = createNodesArray(nodesInput);
 
-    let currentNodes = nodes.filter((node) => node.main.slice(-1) === 'A');
-    // console.log(currentNodes);
+    let currentNodes = nodes.filter((node) => node.main.endsWith('A'));
     let directionsLength = directions.length;
     let index, count = 0;
 
     while (true) {
-        // console.log("currentNodes", currentNodes);
-        if (currentNodes.every((node) => node.main.slice(-1) === 'Z')) {
+        if (currentNodes.every((node) => node.main.endsWith('Z'))) {
             break;
         }
 
         index = count % directionsLength;
         const direction = directions[index];
 
-        let nextNodes = [];
         if (direction == "R") {
-            for (const currentNode of currentNodes) {
-                // console.log("currentNode", currentNode);
-                const nextNode = nodes.filter((node) => node.main === currentNode.rigth)[0];
-                // console.log("nextNode", nextNode);
-                nextNodes.push(nextNode);
-            }
-            currentNodes = nextNodes;
+            currentNodes = currentNodes.flatMap((currentNode) => nodes.filter((node) => node.main === currentNode.rigth));
         } else {
-            for (const currentNode of currentNodes) {
-                // console.log("currentNode", currentNode);
-                const nextNode = nodes.filter((node) => node.main === currentNode.left)[0];
-                // console.log("nextNode", nextNode);
-                nextNodes.push(nextNode);
-            }
-            // console.log("nextNodes", nextNodes);
-            currentNodes = nextNodes;
+            currentNodes = currentNodes.flatMap((currentnode) => nodes.filter((node) => node.main === currentnode.left));
         }
 
         count++;
