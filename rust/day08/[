@@ -1,0 +1,6 @@
+pub fn main(input: &str) -> String {
+    
+    println!(input.split(""));
+
+    "todo!()".to_string()
+}
